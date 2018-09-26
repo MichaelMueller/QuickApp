@@ -1,0 +1,27 @@
+{
+  "name": "michaelmueller/quickapp",
+  "type": "library",
+  "description": "Implementations for App related Services inside the Quick Framework",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Michael Mueller",
+      "email": "michaelmuelleronline@gmx.de"
+    }
+  ],
+  "require": {
+    "php": ">=5.6",
+    "michaelmueller/quick": "dev-master",
+    "sinergi/browser-detector": "~6.1.2"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Qck\\App\\": "src"
+    },
+    "files": [
+      "src/autoload.php"
+    ]
+  }
+}
