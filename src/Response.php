@@ -6,11 +6,11 @@ namespace Qck;
  *
  * @author muellerm
  */
-class Response implements \Qck\Interfaces\Response
+class Response implements \Qck\Interfaces\App\Response
 {
 
-  function __construct( \Qck\Interfaces\Output $Output = null,
-                        $ExitCode = \Qck\Interfaces\Response::EXIT_CODE_OK )
+  function __construct( \Qck\Interfaces\App\Output $Output = null,
+                        $ExitCode = \Qck\Interfaces\App\Response::EXIT_CODE_OK )
   {
     $this->ExitCode = $ExitCode;
     $this->Output = $Output;
@@ -44,7 +44,7 @@ class Response implements \Qck\Interfaces\Response
 
   /**
    *
-   * @var \Qck\Interfaces\Output
+   * @var \Qck\Interfaces\App\Output
    */
   protected $Output;
 
