@@ -25,17 +25,6 @@ class Response implements \Qck\Interfaces\App\Response
   {
     return $this->Output;
   }
-
-  public function setExitCode( $ExitCode )
-  {
-    $this->ExitCode = $ExitCode;
-  }
-
-  public function setOutput( Interfaces\Output $Output )
-  {
-    $this->Output = $Output;
-  }
-
   /**
    *
    * @var mixed string or Template 
