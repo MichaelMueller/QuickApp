@@ -1,6 +1,6 @@
 <?php
 
-namespace Qck;
+namespace Qck\App;
 
 /**
  * The Router gets the currently selected controller of the application
