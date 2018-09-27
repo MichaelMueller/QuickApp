@@ -6,11 +6,11 @@ namespace Qck\App;
  *
  * @author muellerm
  */
-class ResponseFactory implements \Qck\Interfaces\App\ResponseFactory
+class ResponseFactory implements \Qck\App\Interfaces\ResponseFactory
 {
 
-  public function create( \Qck\Interfaces\App\Output $Output = null,
-                          $ExitCode = \Qck\Interfaces\App\Response::EXIT_CODE_OK )
+  public function create( \Qck\App\Interfaces\Output $Output = null,
+                          $ExitCode = \Qck\App\Interfaces\Response::EXIT_CODE_OK )
   {
     return new Response( $Output, $ExitCode );
   }

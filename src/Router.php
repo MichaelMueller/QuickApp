@@ -7,13 +7,13 @@ namespace Qck\App;
  *
  * @author muellerm
  */
-class Router implements \Qck\Interfaces\App\Router
+class Router implements \Qck\App\Interfaces\Router
 {
 
   const DEFAULT_QUERY = "Start";
   const DEFAULT_QUERY_KEY = "q";
 
-  function __construct( \Qck\Interfaces\App\Request $Request )
+  function __construct( \Qck\App\Interfaces\Request $Request )
   {
     $this->Request = $Request;
     $this->DefaultQuery = self::DEFAULT_QUERY;
@@ -65,9 +65,9 @@ class Router implements \Qck\Interfaces\App\Router
     return $controllerFqcn;
   }
 
-  public function getLink( $controllerFqcn, $args = array () )
+  public function getLink( $ControllerFqcn, $args = array () )
   {
-    $query = array_search( $controllerFqcn, $this->ControllerFqcns );
+    $query = array_search( $ControllerFqcn, $this->ControllerFqcns );
 
     $link = "?" . $this->QueryKey . "=" . $query;
 
@@ -79,9 +79,15 @@ class Router implements \Qck\Interfaces\App\Router
     return $link;
   }
 
+  public function redirect( $ControllerFqcn, $args = array () )
+  {
+    $Link = $this->getLink( $ControllerFqcn, $args );
+    header( "Location: " . $Link );
+  }
+
   /**
    *
-   * @var \Qck\Interfaces\App\Request
+   * @var \Qck\App\Interfaces\Request
    */
   protected $Request;
 

@@ -7,7 +7,7 @@ namespace Qck\App;
  * 
  * @author muellerm
  */
-class Starter implements \Qck\Interfaces\App\Starter
+class Starter implements \Qck\App\Interfaces\Starter
 {
 
   function __construct( \Qck\Interfaces\ServiceRepo $ServiceRepo )
@@ -15,19 +15,19 @@ class Starter implements \Qck\Interfaces\App\Starter
     $this->ServiceRepo = $ServiceRepo;
   }
 
-  function run()
+  function exec()
   {
     try
     {
-      /* @var $Request \Qck\Interfaces\App\Request */
-      $Request = $this->ServiceRepo->get( \Qck\Interfaces\App\Request::class );
+      /* @var $Request \Qck\App\Interfaces\Request */
+      $Request = $this->ServiceRepo->get( \Qck\App\Interfaces\Request::class );
       if ( $Request->isCli() )
       {
         ini_set( 'display_errors', 1 );
         ini_set( 'log_errors', 0 );
       }
-      /* @var $Router \Qck\Interfaces\App\Router */
-      $Router = $this->ServiceRepo->get( \Qck\Interfaces\App\Router::class );
+      /* @var $Router \Qck\App\Interfaces\Router */
+      $Router = $this->ServiceRepo->get( \Qck\App\Interfaces\Router::class );
       $Controller = $Router->getController();
 
       $this->handleController( $Controller );
@@ -39,13 +39,13 @@ class Starter implements \Qck\Interfaces\App\Starter
 
       /* @var $Request Interfaces\Mail\AdminMailer */
       $AdminMailer = $this->ServiceRepo->getOptional( Interfaces\Mail\AdminMailer::class );
-      /* @var $Config \Qck\Interfaces\App\Config */
-      $Config = $this->ServiceRepo->getOptional( \Qck\Interfaces\App\Config::class );
+      /* @var $Config \Qck\App\Interfaces\Config */
+      $Config = $this->ServiceRepo->getOptional( \Qck\App\Interfaces\Config::class );
       // First step to handle the error: Mail it (if configured)
       if ( $AdminMailer )
         $AdminMailer->sendToAdmin( "Error for App " . $Config->getAppName() . " on " . $Config->getHostName(), $ErrText );
-      /* @var $ErrorController \Qck\Interfaces\App\Controller */
-      $ErrorController = $this->ServiceRepo->getOptional( \Qck\Interfaces\App\ErrorController::class );
+      /* @var $ErrorController \Qck\App\Interfaces\Controller */
+      $ErrorController = $this->ServiceRepo->getOptional( \Qck\App\Interfaces\ErrorController::class );
       if ( $ErrorController )
       {
         $ErrorController->setErrorCode( $e->getCode() );
@@ -54,14 +54,14 @@ class Starter implements \Qck\Interfaces\App\Starter
     }
   }
 
-  protected function handleController( \Qck\Interfaces\App\Controller $Controller )
+  protected function handleController( \Qck\App\Interfaces\Controller $Controller )
   {
     $Response = $Controller->run( $this->ServiceRepo );
     $Output = $Response->getOutput();
     if ( $Output !== null )
     {
-      /* @var $Request \Qck\Interfaces\App\Request */
-      $Request = $this->ServiceRepo->get( \Qck\Interfaces\App\Request::class );
+      /* @var $Request \Qck\App\Interfaces\Request */
+      $Request = $this->ServiceRepo->get( \Qck\App\Interfaces\Request::class );
       if ( $Request->isCli() == false )
       {
         http_response_code( $Response->getExitCode() );

@@ -6,7 +6,7 @@ namespace Qck\App;
  *
  * @author muellerm
  */
-class Request implements \Qck\Interfaces\App\Request
+class Request implements \Qck\App\Interfaces\Request
 {
 
   function __construct( $OverwriteParams = null )
@@ -26,14 +26,8 @@ class Request implements \Qck\Interfaces\App\Request
 
   public function get( $Name, $Default = null )
   {
-    if ( !$this->Params )
-    {
-      $this->Params = isset( $_SERVER[ "argc" ] ) ? $this->getArgvAsParamsArray() : $_REQUEST;
-
-      if ( $this->OverwriteParams )
-        $this->Params = array_merge( $this->Params, $this->OverwriteParams );
-    }
-    return isset( $this->Params[ $Name ] ) ? $this->Params[ $Name ] : $Default;
+    $Params = $this->getParams();
+    return isset( $Params[ $Name ] ) ? $Params[ $Name ] : $Default;
   }
 
   protected function getArgvAsParamsArray()
@@ -97,6 +91,24 @@ class Request implements \Qck\Interfaces\App\Request
   {
     $browser = new \Sinergi\BrowserDetector\Browser();
     return $browser->getName() != \Sinergi\BrowserDetector\Browser::UNKNOWN;
+  }
+
+  public function has( $Name )
+  {
+    $Params = $this->getParams();
+    return isset( $Params[ $Name ] );
+  }
+
+  public function getParams()
+  {
+    if ( !$this->Params )
+    {
+      $this->Params = isset( $_SERVER[ "argc" ] ) ? $this->getArgvAsParamsArray() : $_REQUEST;
+
+      if ( $this->OverwriteParams )
+        $this->Params = array_merge( $this->Params, $this->OverwriteParams );
+    }
+    return $this->Params;
   }
 
   protected $OverwriteParams;
