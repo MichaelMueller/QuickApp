@@ -13,9 +13,12 @@ class Router implements \Qck\App\Interfaces\Router
   const DEFAULT_QUERY = "Start";
   const DEFAULT_QUERY_KEY = "q";
 
-  function __construct( \Qck\App\Interfaces\Request $Request )
+  function __construct( \Qck\App\Interfaces\Request $Request,
+                        \Qck\App\Interfaces\RouteSource $RouteSource )
   {
     $this->Request = $Request;
+    $this->RouteSource = $RouteSource;
+
     $this->DefaultQuery = self::DEFAULT_QUERY;
     $this->QueryKey = self::DEFAULT_QUERY_KEY;
   }
@@ -67,7 +70,7 @@ class Router implements \Qck\App\Interfaces\Router
 
   public function getLink( $ControllerFqcn, $args = array () )
   {
-    $query = array_search( $ControllerFqcn, $this->ControllerFqcns );
+    $query = $this->RouteSource->getRoute( $ControllerFqcn );
 
     $link = "?" . $this->QueryKey . "=" . $query;
 
@@ -85,11 +88,35 @@ class Router implements \Qck\App\Interfaces\Router
     header( "Location: " . $Link );
   }
 
+  public function getCurrentRoute()
+  {
+    static $CurrentRoute = null;
+    if ( !$CurrentRoute )
+      $CurrentRoute = $this->Request->get( $this->QueryKey, $this->DefaultQuery );
+    return $CurrentRoute;
+  }
+
+  public function setDefaultRoute( $DefaultRoute = self::DEFAULT_ROUTE )
+  {
+    $this->DefaultQuery = $DefaultRoute;
+  }
+
+  public function setRouteKey( $RouteKey )
+  {
+    $this->QueryKey = $RouteKey;
+  }
+
   /**
    *
    * @var \Qck\App\Interfaces\Request
    */
   protected $Request;
+
+  /**
+   *
+   * @var \Qck\App\Interfaces\RouteSource
+   */
+  protected $RouteSource;
 
   /**
    *

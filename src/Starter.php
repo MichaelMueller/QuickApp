@@ -28,8 +28,26 @@ class Starter implements \Qck\App\Interfaces\Starter
       }
       /* @var $Router \Qck\App\Interfaces\Router */
       $Router = $this->ServiceRepo->get( \Qck\App\Interfaces\Router::class );
-      $Controller = $Router->getController();
+      /* @var $RouteSource \Qck\App\Interfaces\RouteSource */
+      $RouteSource = $this->ServiceRepo->get( \Qck\App\Interfaces\RouteSource::class );
 
+      $CurrentRoute = $Router->getCurrentRoute();
+      $Fqcn = $RouteSource->getFqcn( $CurrentRoute );
+      if ( !class_exists( $Fqcn, true ) )
+        throw new \Exception( sprintf( "Route %s or class %s not found. Please check route definitions.", $CurrentRoute, $Fqcn ), Interfaces\Response::EXIT_CODE_NOT_FOUND );
+      // Authentication
+      if ( $RouteSource->isProtected( $CurrentRoute ) )
+      {
+        /* @var $UserDb \Qck\App\Interfaces\UserDb */
+        $UserDb = $this->ServiceRepo->get( \Qck\App\Interfaces\UserDb::class );
+        /* @var $Session \Qck\App\Interfaces\Session */
+        $Session = $this->ServiceRepo->get( \Qck\App\Interfaces\Session::class );
+        $User = $UserDb->getUser( $Session->getUserName() );
+        if ( !$User || !$User->hasPermissionFor( $CurrentRoute ) )
+          throw new \Exception( "User cannot access Route " . $CurrentRoute, Interfaces\Response::EXIT_CODE_UNAUTHORIZED );
+      }
+
+      $Controller = new $Fqcn;
       $this->handleController( $Controller );
     }
     catch ( \Exception $exc )
@@ -48,8 +66,12 @@ class Starter implements \Qck\App\Interfaces\Starter
       $ErrorController = $this->ServiceRepo->getOptional( \Qck\App\Interfaces\ErrorController::class );
       if ( $ErrorController )
       {
-        $ErrorController->setErrorCode( $e->getCode() );
+        $ErrorController->setErrorCode( $exc->getCode() );
         $this->handleController( $ErrorController );
+      }
+      else
+      {
+        throw $exc;
       }
     }
   }
