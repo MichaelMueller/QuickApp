@@ -10,16 +10,16 @@ namespace Qck\App;
 class Router implements \Qck\App\Interfaces\Router
 {
 
-  const DEFAULT_QUERY = "Start";
   const DEFAULT_QUERY_KEY = "q";
 
-  function __construct( \Qck\App\Interfaces\Request $Request,
-                        \Qck\App\Interfaces\RouteSource $RouteSource )
+  function __construct( \Qck\App\Interfaces\Request $Request, array $Routes,
+                        array $ProtectedRoutes = [] )
   {
     $this->Request = $Request;
-    $this->RouteSource = $RouteSource;
+    $this->Routes = $Routes;
+    $this->ProtectedRoutes = $ProtectedRoutes;
 
-    $this->DefaultQuery = self::DEFAULT_QUERY;
+    $this->DefaultQuery = \Qck\App\Interfaces\Router::DEFAULT_ROUTE;
     $this->QueryKey = self::DEFAULT_QUERY_KEY;
   }
 
@@ -70,7 +70,7 @@ class Router implements \Qck\App\Interfaces\Router
 
   public function getLink( $ControllerFqcn, $args = array () )
   {
-    $query = $this->RouteSource->getRoute( $ControllerFqcn );
+    $query = $this->getRoute( $ControllerFqcn );
 
     $link = "?" . $this->QueryKey . "=" . $query;
 
@@ -106,6 +106,22 @@ class Router implements \Qck\App\Interfaces\Router
     $this->QueryKey = $RouteKey;
   }
 
+  public function getFqcn( $Route )
+  {
+    return isset( $this->Routes[ $Route ] ) ? $this->Routes[ $Route ] : null;
+  }
+
+  public function isProtected( $Route )
+  {
+    return in_array( $Route, $this->ProtectedRoutes );
+  }
+
+  public function getRoute( $Fqcn )
+  {
+    $key = array_search( $Fqcn, $this->Routes );
+    return $key !== false ? $key : null;
+  }
+
   /**
    *
    * @var \Qck\App\Interfaces\Request
@@ -114,9 +130,15 @@ class Router implements \Qck\App\Interfaces\Router
 
   /**
    *
-   * @var \Qck\App\Interfaces\RouteSource
+   * @var array 
    */
-  protected $RouteSource;
+  protected $Routes;
+
+  /**
+   *
+   * @var array
+   */
+  protected $ProtectedRoutes;
 
   /**
    *

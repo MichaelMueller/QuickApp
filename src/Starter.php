@@ -28,15 +28,13 @@ class Starter implements \Qck\App\Interfaces\Starter
       }
       /* @var $Router \Qck\App\Interfaces\Router */
       $Router = $this->ServiceRepo->get( \Qck\App\Interfaces\Router::class );
-      /* @var $RouteSource \Qck\App\Interfaces\RouteSource */
-      $RouteSource = $this->ServiceRepo->get( \Qck\App\Interfaces\RouteSource::class );
 
       $CurrentRoute = $Router->getCurrentRoute();
-      $Fqcn = $RouteSource->getFqcn( $CurrentRoute );
+      $Fqcn = $Router->getFqcn( $CurrentRoute );
       if ( !class_exists( $Fqcn, true ) )
         throw new \Exception( sprintf( "Route %s or class %s not found. Please check route definitions.", $CurrentRoute, $Fqcn ), Interfaces\Response::EXIT_CODE_NOT_FOUND );
       // Authentication
-      if ( $RouteSource->isProtected( $CurrentRoute ) )
+      if ( $Router->isProtected( $CurrentRoute ) )
       {
         /* @var $UserDb \Qck\App\Interfaces\UserDb */
         $UserDb = $this->ServiceRepo->get( \Qck\App\Interfaces\UserDb::class );
