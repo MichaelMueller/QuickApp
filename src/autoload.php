@@ -16,12 +16,6 @@ $ServiceRepo->addServiceFactory( Qck\App\Request::class, function()
   return new Qck\App\Request();
 } );
 
-// add Qck\ResponseFactory
-$ServiceRepo->addServiceFactory( Qck\App\ResponseFactory::class, function()
-{
-  return new Qck\App\ResponseFactory();
-} );
-
 // add Qck\Router
 $ServiceRepo->addServiceFactory( Qck\App\Router::class, function() use($ServiceRepo)
 {
@@ -33,4 +27,11 @@ $ServiceRepo->addServiceFactory( Qck\App\Html\PageFactory::class, function()
 {
   return new Qck\App\Html\PageFactory();
 } );
+
+// add \Qck\App\Response
+$ServiceRepo->addServiceFactory( \Qck\App\Response::class, function()
+{
+  return new \Qck\App\Response();
+} );
+
 

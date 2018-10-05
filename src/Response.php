@@ -6,15 +6,8 @@ namespace Qck\App;
  *
  * @author muellerm
  */
-class Response implements \Qck\App\Interfaces\Response
+class Response implements \Qck\App\Interfaces\Response, Interfaces\ResponseGuard
 {
-
-  function __construct( \Qck\App\Interfaces\Output $Output = null,
-                        $ExitCode = \Qck\App\Interfaces\Response::EXIT_CODE_OK )
-  {
-    $this->ExitCode = $ExitCode;
-    $this->Output = $Output;
-  }
 
   function getExitCode()
   {
@@ -25,6 +18,15 @@ class Response implements \Qck\App\Interfaces\Response
   {
     return $this->Output;
   }
+
+  public function getResponse( \Qck\App\Interfaces\Output $Output = null,
+                               $ExitCode = \Qck\App\Interfaces\Response::EXIT_CODE_OK )
+  {
+    $this->ExitCode = $ExitCode;
+    $this->Output = $Output;
+    return $this;
+  }
+
   /**
    *
    * @var mixed string or Template 
