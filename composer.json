@@ -14,14 +14,9 @@
     "michaelmueller/quick": "dev-master",
     "sinergi/browser-detector": "~6.1.2"
   },
-  "require-dev": {
-  },
   "autoload": {
     "psr-4": {
       "Qck\\App\\": "src"
-    },
-    "files": [
-      "src/quickapp_autoload.php"
-    ]
+    }
   }
 }
