@@ -12,17 +12,23 @@ class Router implements \Qck\App\Interfaces\Router
 
   const DEFAULT_QUERY_KEY = "q";
 
-  function __construct( \Qck\App\Interfaces\Request $Request, array $Routes,
-                        array $ProtectedRoutes = [] )
+  function __construct( \Qck\App\Interfaces\Request $Request )
   {
     $this->Request = $Request;
-    $this->Routes = $Routes;
-    $this->ProtectedRoutes = $ProtectedRoutes;
 
     $this->DefaultQuery = \Qck\App\Interfaces\Router::DEFAULT_ROUTE;
     $this->QueryKey = self::DEFAULT_QUERY_KEY;
   }
-
+  function addRoute( $Route, $ControllerFqcn )
+  {
+    $this->ControllerFqcns[ $Route ] = $ControllerFqcn;
+  }
+  function addProtectedRoute( $Route )
+  {
+    $this->ProtectedRoutes[ $Route ] = $Route;
+  }
+  
+  
   function addController( $Query, $ControllerFqcn )
   {
     $this->ControllerFqcns[ $Query ] = $ControllerFqcn;
@@ -122,6 +128,11 @@ class Router implements \Qck\App\Interfaces\Router
     return $key !== false ? $key : null;
   }
 
+  public function getDefaultRoute()
+  {
+    return $this->DefaultQuery;
+  }
+
   /**
    *
    * @var \Qck\App\Interfaces\Request
@@ -132,13 +143,13 @@ class Router implements \Qck\App\Interfaces\Router
    *
    * @var array 
    */
-  protected $Routes;
+  protected $Routes=[];
 
   /**
    *
    * @var array
    */
-  protected $ProtectedRoutes;
+  protected $ProtectedRoutes=[];
 
   /**
    *
