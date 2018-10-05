@@ -21,7 +21,7 @@
       "Qck\\App\\": "src"
     },
     "files": [
-      "src/autoload.php"
+      "src/quickapp_autoload.php"
     ]
   }
 }
