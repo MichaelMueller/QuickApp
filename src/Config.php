@@ -7,7 +7,7 @@ namespace Qck\App;
  *
  * @author muellerm
  */
-class Config implements \Qck\App\Interfaces\Config
+class Config implements \Qck\Interfaces\Config
 {
 
   function __construct( $AppName )

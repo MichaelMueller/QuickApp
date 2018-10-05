@@ -7,16 +7,16 @@ namespace Qck\App;
  *
  * @author muellerm
  */
-class Router implements \Qck\App\Interfaces\Router
+class Router implements \Qck\Interfaces\Router
 {
 
   const DEFAULT_QUERY_KEY = "q";
 
-  function __construct( \Qck\App\Interfaces\Request $Request )
+  function __construct( \Qck\Interfaces\Request $Request )
   {
     $this->Request = $Request;
 
-    $this->DefaultQuery = \Qck\App\Interfaces\Router::DEFAULT_ROUTE;
+    $this->DefaultQuery = \Qck\Interfaces\Router::DEFAULT_ROUTE;
     $this->QueryKey = self::DEFAULT_QUERY_KEY;
   }
   function addRoute( $Route, $ControllerFqcn )
@@ -135,7 +135,7 @@ class Router implements \Qck\App\Interfaces\Router
 
   /**
    *
-   * @var \Qck\App\Interfaces\Request
+   * @var \Qck\Interfaces\Request
    */
   protected $Request;
 

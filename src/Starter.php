@@ -7,7 +7,7 @@ namespace Qck\App;
  * 
  * @author muellerm
  */
-class Starter implements \Qck\App\Interfaces\Starter
+class Starter implements \Qck\Interfaces\Starter
 {
 
   function __construct( \Qck\Interfaces\ServiceRepo $ServiceRepo )
@@ -19,15 +19,15 @@ class Starter implements \Qck\App\Interfaces\Starter
   {
     try
     {
-      /* @var $Request \Qck\App\Interfaces\Request */
-      $Request = $this->ServiceRepo->get( \Qck\App\Interfaces\Request::class );
+      /* @var $Request \Qck\Interfaces\Request */
+      $Request = $this->ServiceRepo->get( \Qck\Interfaces\Request::class );
       if ( $Request->isCli() )
       {
         ini_set( 'display_errors', 1 );
         ini_set( 'log_errors', 0 );
       }
-      /* @var $Router \Qck\App\Interfaces\Router */
-      $Router = $this->ServiceRepo->get( \Qck\App\Interfaces\Router::class );
+      /* @var $Router \Qck\Interfaces\Router */
+      $Router = $this->ServiceRepo->get( \Qck\Interfaces\Router::class );
 
       $CurrentRoute = $Router->getCurrentRoute();
       $Fqcn = $Router->getFqcn( $CurrentRoute );
@@ -36,10 +36,10 @@ class Starter implements \Qck\App\Interfaces\Starter
       // Authentication
       if ( $Router->isProtected( $CurrentRoute ) )
       {
-        /* @var $UserDb \Qck\App\Interfaces\UserDb */
-        $UserDb = $this->ServiceRepo->get( \Qck\App\Interfaces\UserDb::class );
-        /* @var $Session \Qck\App\Interfaces\Session */
-        $Session = $this->ServiceRepo->get( \Qck\App\Interfaces\Session::class );
+        /* @var $UserDb \Qck\Interfaces\UserDb */
+        $UserDb = $this->ServiceRepo->get( \Qck\Interfaces\UserDb::class );
+        /* @var $Session \Qck\Interfaces\Session */
+        $Session = $this->ServiceRepo->get( \Qck\Interfaces\Session::class );
         $User = $UserDb->getUser( $Session->getUserName() );
         if ( !$User || !$User->hasPermissionFor( $CurrentRoute ) )
           throw new \Exception( "User cannot access Route " . $CurrentRoute, Interfaces\Response::EXIT_CODE_UNAUTHORIZED );
@@ -55,13 +55,13 @@ class Starter implements \Qck\App\Interfaces\Starter
 
       /* @var $Request Interfaces\Mail\AdminMailer */
       $AdminMailer = $this->ServiceRepo->getOptional( Interfaces\Mail\AdminMailer::class );
-      /* @var $Config \Qck\App\Interfaces\Config */
-      $Config = $this->ServiceRepo->getOptional( \Qck\App\Interfaces\Config::class );
+      /* @var $Config \Qck\Interfaces\Config */
+      $Config = $this->ServiceRepo->getOptional( \Qck\Interfaces\Config::class );
       // First step to handle the error: Mail it (if configured)
       if ( $AdminMailer )
         $AdminMailer->sendToAdmin( "Error for App " . $Config->getAppName() . " on " . $Config->getHostName(), $ErrText );
-      /* @var $ErrorController \Qck\App\Interfaces\Controller */
-      $ErrorController = $this->ServiceRepo->getOptional( \Qck\App\Interfaces\ErrorController::class );
+      /* @var $ErrorController \Qck\Interfaces\Controller */
+      $ErrorController = $this->ServiceRepo->getOptional( \Qck\Interfaces\ErrorController::class );
       if ( $ErrorController )
       {
         $ErrorController->setErrorCode( $exc->getCode() );
@@ -74,14 +74,14 @@ class Starter implements \Qck\App\Interfaces\Starter
     }
   }
 
-  protected function handleController( \Qck\App\Interfaces\Controller $Controller )
+  protected function handleController( \Qck\Interfaces\Controller $Controller )
   {
     $Response = $Controller->run( $this->ServiceRepo );
     $Output = $Response->getOutput();
     if ( $Output !== null )
     {
-      /* @var $Request \Qck\App\Interfaces\Request */
-      $Request = $this->ServiceRepo->get( \Qck\App\Interfaces\Request::class );
+      /* @var $Request \Qck\Interfaces\Request */
+      $Request = $this->ServiceRepo->get( \Qck\Interfaces\Request::class );
       if ( $Request->isCli() == false )
       {
         http_response_code( $Response->getExitCode() );
